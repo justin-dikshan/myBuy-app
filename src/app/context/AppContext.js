@@ -3,13 +3,14 @@
 import { createContext, useContext, useState } from 'react';
 
 const AppContext = createContext();
-const BASE_URL = 'http://localhost:8080/api/v1';
+const BASE_URL = process.env.BASE_URL;
 
 export const useAppContext = () => {
   return useContext(AppContext);
 };
 
 export const AppProvider = ({ children }) => {
+  console.log("BA", BASE_URL)
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
   const [products, setProducts] = useState([]);
