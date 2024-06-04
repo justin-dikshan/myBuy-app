@@ -10,11 +10,15 @@ export const useAppContext = () => {
 };
 
 export const AppProvider = ({ children }) => {
-  console.log("BA", BASE_URL)
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
   const [products, setProducts] = useState([]);
   const [product, setProduct] = useState(null);
+  const [isProductsLoading, setIsProductsLoading] = useState(false);
+  const [cartItems, setCartItems] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
+  const [sortAs, setSortAs] = useState('asc');
+  const [sortBy, setSortBy] = useState('mostPopular');
 
   const getCategories = async () => {
     try {
@@ -35,33 +39,41 @@ export const AppProvider = ({ children }) => {
   };
 
   const getProducts = async (
-    currentPage,
-    category,
-    priceRange,
-    brands,
-    tags
+      currentPage,
+      category,
+      priceRange,
+      brands,
+      tags,
+      searchKey
   ) => {
     try {
       const page = currentPage || 1;
 
-      const prams = [];
+      const params = [];
 
-      category && prams.push(`category=${category}`);
+      setIsProductsLoading(true);
+
+      category && params.push(`category=${category}`);
       priceRange &&
-        prams.push(
+      params.push(
           `startPrice=${priceRange.startRange}&endPrice=${priceRange.endRange}`
-        );
-      brands && brands.length > 0 && prams.push(`brands=${brands.toString()}`);
-      tags && prams.push(`tags=${tags.toString()}`);
+      );
+      brands && brands.length > 0 && params.push(`brands=${brands.toString()}`);
+      tags && params.push(`tags=${tags.toString()}`);
+      searchKey && params.push(`searchKey=${searchKey}`);
 
-      const stringParams = prams.join('&');
+      const stringParams = params.join('&');
+
+      const sortParams = `&sortBy=${sortBy}&sortAs=${sortAs}`
 
       const res = await fetch(
-        `${BASE_URL}/products?page=${page}${stringParams && '&'}${stringParams}`
+          `${BASE_URL}/products?page=${page}${stringParams && '&'}${stringParams}${sortParams}`
       );
       setProducts(await res.json());
+      setIsProductsLoading(false);
     } catch (error) {
       console.log(error);
+      setIsProductsLoading(false);
     }
   };
 
@@ -75,19 +87,28 @@ export const AppProvider = ({ children }) => {
   };
 
   return (
-    <AppContext.Provider
-      value={{
-        getCategories,
-        getBrands,
-        getProducts,
-        getProduct,
-        categories,
-        brands,
-        products,
-        product,
-      }}
-    >
-      {children}
-    </AppContext.Provider>
+      <AppContext.Provider
+          value={{
+            getCategories,
+            getBrands,
+            getProducts,
+            getProduct,
+            setCartCount,
+            setCartItems,
+            setSortAs,
+            setSortBy,
+            categories,
+            brands,
+            products,
+            product,
+            isProductsLoading,
+            cartCount,
+            cartItems,
+            sortAs,
+            sortBy,
+          }}
+      >
+        {children}
+      </AppContext.Provider>
   );
 };

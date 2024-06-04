@@ -25,7 +25,7 @@ const Home = () => {
       <TodaysDeal />
       <SelectedBrand />
       <BestDeals />
-      <ShopByBrand />
+      {/*<ShopByBrand />*/}
       <Footer />
     </>
   );

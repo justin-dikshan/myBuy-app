@@ -24,20 +24,20 @@ const ProductPage = () => {
   };
 
   return (
-    <>
-      <Navbar />
-      <div className="w-full bg-[#F5F5F7] pt-28">
-        <div className="w-[90%] mx-auto pb-16">
-          <ProductView />
-          <ProductDetailsToggler
-            selectedTab={selectedTab}
-            setSelectedTab={setSelectedTab}
-          />
+      <>
+        <Navbar />
+        <div className="w-full bg-[#F5F5F7] pt-28">
+          <div className="w-[90%] mx-auto pb-16">
+            <ProductView />
+            <ProductDetailsToggler
+                selectedTab={selectedTab}
+                setSelectedTab={setSelectedTab}
+            />
+          </div>
+          {selectedTab === 1 && <OtherProducts />}
         </div>
-        {selectedTab === 1 && <OtherProducts />}
-      </div>
-      <Footer />
-    </>
+        <Footer />
+      </>
   );
 };
 
